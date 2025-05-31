@@ -2,7 +2,7 @@
 Program that visualizes data algorithms and how they work
 
 # TODO
-1. Print data with bar chart(function prob printing the array with characters)
+2. Add different algorithms and show the changes from the array step by step
 
 # Notes
-*Array length is hardcoded to 50
+*Array length is hardcoded to 30
