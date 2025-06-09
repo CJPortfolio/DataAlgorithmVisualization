@@ -1,17 +1,88 @@
 package com.datavisualizationproject;
 
+import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws IOException
     {
+        Scanner scnr = new Scanner(System.in);
+        int[] dataSet = ArrayValueRandomizer();
+
+
+        //-1 for input error
+        int input = -1;
+
+            System.out.println("\n\nHi and welcome to Data Algorithm Visuals!");
+
+        do 
+        { 
+            System.out.println("\nPress a number key to view the corresponding data algorithm.");
+            System.out.println("Press 7 to quit:\n");
+            System.out.println("1: Quick Sort");
+            System.out.println("2: Bubble Sort");
+            System.out.println("3: Counting Sort");
+            System.out.println("4: Merge Sort");
+            System.out.println("5: Insertion Sort");
+            System.out.println("6: Heap Sort Algorithm\n");
+            System.out.print("Enter key: ");
+
+            input = scnr.nextInt();
+
+            switch(input)
+            {
+                case 1 -> {
+
+                }
+
+                case 2 -> {
+                Boolean pause = pauseInquiry(scnr);
+
+                bubbleSort(dataSet, pause);
+
+                }
+
+                case 3 -> {
+                }
+
+                case 4 -> {
+                }
+
+                case 5 -> {
+                }
+
+                case 6 -> {
+                }
+                
+                case 7 -> {
+
+                    System.exit(0);
+                }
+
+                default -> throw new IOException("Something in input went wrong");
+            }
+            
+            //Quick Sort Algorithm
+
+            //Bubble Sort Algorithm
+
+            //Counting Sort Algorithm
+
+            //Merge Sort Algorithm
+
+            //Insertion Sort Algorithm
+
+            //Heap Sort Algorithm
+        } 
+        while (true);
         
         // Testing printDataset function
         // int max = 30;
         // int min = 1;
-        int[] dataSet = ArrayValueRandomizer();
-        PrintData(dataSet);
+
+
 
         // Testing unDuplicate function
         // int num = 15;
@@ -19,13 +90,7 @@ public class Main
         // System.out.println(num);
     }
 
-    public static void PrintBar(int amount)
-    {
-        for (int i = 0; i < amount; i++) {
-            System.out.println("*");
-
-        }
-    }
+    
 
 
     public static void PrintData(int[] data)
@@ -110,6 +175,59 @@ public class Main
 
         return dataSet;
     }
+
+    public static Boolean pauseInquiry(Scanner scnr) throws IOException {
+        System.out.println("Would you like it to pause between changes?");
+        System.out.println("Press 1 for yes");
+        System.out.println("or 2 for no");
+
+        int input = -2;
+
+        input = scnr.nextInt();
+
+        switch (input) {
+            case 1 -> {
+                return true;
+            }
+            case 2 -> {
+                return false;
+            }
+            default -> throw new IOException("Error in pause inquiry");
+        }
+
+    }
+
+    //Quick Sort Algorithm
+
+    //Bubble Sort Algorithm
+    public static void bubbleSort(int[] data, Boolean pauseOption) throws IOException
+    {
+        Scanner scnr = new Scanner(System.in);
+        int cont = -3;
+
+        for (int i = 0; i < data.length - 1; i++) {
+            for (int j = 0; j < data.length - i - 1; j++) {
+                if (data[j] > data[j + 1]) {
+                    
+                    if(pauseOption)
+                    {
+                        PrintData(data);
+                        System.out.print("\nPress 1 to stop pausing or any other number to continue.");
+                        cont = scnr.nextInt();
+                        if(cont == 1) pauseOption = false;
+                    }
+                
+                    int temp = data[j];
+                    data[j] = data[j + 1];
+                    data[j + 1] = temp;
+
+                    
+                }
+            }
+        }
+
+        PrintData(data);
+    }   
 
 }
 
