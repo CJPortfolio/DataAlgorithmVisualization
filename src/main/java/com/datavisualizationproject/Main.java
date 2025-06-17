@@ -8,8 +8,68 @@ Made by Christopher Wiratman*/
 package com.datavisualizationproject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
+class Heap
+{
+    int arr[];
+    int size;
+    public Heap(int arr[]) {
+        this.arr = arr;
+        this.size = arr.length;
+        this.buildHeap();
+    }
+
+    void buildHeap(){
+        for(int i = this.size/2-1; 1 >= 0; i--)
+        {
+            heapify(i);
+        }
+    }
+
+    void heapify(int root_index) {
+        int max_index = root_index;
+        int child = root_index * 2 + 1;
+
+        if (child < size) {
+            if(arr[child] > arr[root_index]) {
+                max_index = child;
+            }
+        }
+
+        if(child + 1 < size) {
+            if(arr[child + 1] > arr[max_index]) {
+                max_index = child + 1;
+            }
+        }
+
+        swap(arr, root_index, max_index);
+        if(root_index != max_index) {
+            heapify(max_index);
+        }
+    }
+
+    void swap(int arr[], int a, int b) {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+
+    int extractRoot() {
+        int max = arr[0];
+        arr[0] = arr[--size];
+        heapify(0);
+        
+        return max;
+    }
+
+    int getSize() {
+        return size;
+    }
+    
+}
 
 public class Main 
 {
@@ -17,6 +77,7 @@ public class Main
     {
         Scanner scnr = new Scanner(System.in);
         int[] dataSet = ArrayValueRandomizer();
+        int[] originalDataSet = dataSet;
         Boolean pause;
 
         //-1 for input error
@@ -26,6 +87,8 @@ public class Main
 
         do 
         { 
+            dataSet = originalDataSet;
+
             System.out.println("\nPress a number key to view the corresponding data algorithm.");
             System.out.println("Press 7 to quit:\n");
             System.out.println("1: Quick Sort");
@@ -59,14 +122,20 @@ public class Main
 
                 //Counting Sort
                 case 3 -> {
+                pause = pauseInquiry(scnr);
                 
+                countingSort(dataSet, pause, scnr);
+                System.out.println();
 
                 }
+
+
 
                 //Merge Sort
                 case 4 -> {
                 pause = pauseInquiry(scnr);
-
+                mergeSort(dataSet, 0, dataSet.length - 1, pause, scnr);
+                PrintData(dataSet);
                 
                 }
 
@@ -80,8 +149,11 @@ public class Main
 
                 //Heap Sort Algorithm
                 case 6 -> {
-                pause = pauseInquiry(scnr);
+                // pause = pauseInquiry(scnr);
+                // heapSort(dataSet, pause, scnr);
 
+                System.out.println("Not locked in for this one bro ggs.");
+                break;
                 
                 }
                 
@@ -96,31 +168,12 @@ public class Main
                 default -> throw new IOException("Something in input went wrong");
             }
             
-            
-
-            //Bubble Sort Algorithm
-
-            //Counting Sort Algorithm
-
-            //Merge Sort Algorithm
-
-            //Insertion Sort Algorithm
-
-            //Heap Sort Algorithm
         } 
         while (true);
         
-        // Testing printDataset function
-        // int max = 30;
-        // int min = 1;
-
-
-
-        // Testing unDuplicate function
-        // int num = 15;
-        // num = unDuplicate(num);
-        // System.out.println(num);
     }
+
+    
 
     
 
@@ -260,6 +313,58 @@ public class Main
         PrintData(data);
     }
 
+    //Merge Sort Algorithm
+    public static void mergeSort(int[] data, int left, int right, boolean pause, Scanner scnr) throws IOException {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+
+            mergeSort(data, left, mid, pause, scnr);
+            mergeSort(data, mid + 1, right, pause, scnr);
+
+            merge(data, left, mid, right);
+
+            if (pause) {
+                PrintData(data);
+                System.out.print("\nPress 1 to stop pausing or any other number to continue: ");
+                int cont = scnr.nextInt();
+                if (cont == 1) pause = false;
+            }
+        }
+    }
+
+    public static void merge(int[] data, int left, int mid, int right) {
+
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        for (int i = 0; i < n1; ++i)
+            L[i] = data[left + i];
+        for (int j = 0; j < n2; ++j)
+            R[j] = data[mid + 1 + j];
+
+        int i = 0, j = 0;
+        int k = left;
+
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                data[k++] = L[i++];
+            } else {
+                data[k++] = R[j++];
+            }
+        }
+
+        while (i < n1) {
+            data[k++] = L[i++];
+        }
+
+        while (j < n2) {
+            data[k++] = R[j++];
+        }
+    }
+
     //Insertion Sort Algorithm
     public static void insertionSort(int[] data, Boolean pauseOption, Scanner scnr) throws IOException
     {
@@ -291,6 +396,87 @@ public class Main
 
     }
 
+    //Counting Sort Algorithm
+    public static void countingSort(int[] data, Boolean pauseOption, Scanner scnr) throws IOException
+    {
+        int cont = -5;
+
+        // Find the maximum value in the array
+        int max = data[0];
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] > max) {
+                max = data[i];
+            }
+        }
+
+        // Initialize count array
+        int[] count = new int[max + 1];
+        Arrays.fill(count, 0);
+
+        // Store the count of each element
+        for (int value : data) {
+            count[value]++;
+            if (pauseOption) {
+                PrintData(data);
+                System.out.print("\nCount for value " + value + " incremented. Press 1 to stop pausing or any other number to continue: ");
+                cont = scnr.nextInt();
+                if (cont == 1) pauseOption = false;
+            }
+        }
+
+        // Reconstruct the sorted array
+        int index = 0;
+        for (int i = 0; i < count.length; i++) {
+            while (count[i] > 0) {
+                data[index++] = i;
+                count[i]--;
+
+                if (pauseOption) {
+                    PrintData(data);
+                    System.out.print("\nPlacing value " + i + ". Press 1 to stop pausing or any other number to continue: ");
+                    cont = scnr.nextInt();
+                    if (cont == 1) pauseOption = false;
+                }
+            }
+        }
+
+        PrintData(data);
+    }
+
+    //Heap Sort Algorithm
+    public static void heapSort(int[] data, Boolean pauseOption, Scanner scnr) throws IOException
+    {
+             int[] dataCopy = data.clone(); // Work on a copy to preserve original
+    Heap heap = new Heap(dataCopy);
+
+    int cont = -1;
+
+    int[] sorted = new int[dataCopy.length];
+
+        for (int i = dataCopy.length - 1; i >= 0; i--) {
+            sorted[i] = heap.extractRoot();
+
+            // Create a snapshot of the current heap array
+            int[] currentHeapSnapshot = new int[heap.getSize()];
+            for (int j = 0; j < heap.getSize(); j++) {
+                currentHeapSnapshot[j] = heap.arr[j];
+            }
+
+            // Print current state of heap
+            PrintData(currentHeapSnapshot);
+            System.out.println();
+
+            if (pauseOption) {
+                System.out.print("Press 1 to stop pausing or any other number to continue: ");
+                cont = scnr.nextInt();
+                if (cont == 1) pauseOption = false;
+            }
+
+        }
+
+    }
+
 }
+
 
 
