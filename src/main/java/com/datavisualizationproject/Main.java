@@ -107,8 +107,9 @@ public class Main
                 //Quick Sort Algorithm
                 case 1 -> {
                 pause = pauseInquiry(scnr);
-
-                
+                Boolean[] pauseWrapper = new Boolean[]{pause};
+                quickSort(dataSet, 0, dataSet.length - 1, pauseWrapper, scnr);
+                PrintData(dataSet);
 
                 }
                 
@@ -283,6 +284,52 @@ public class Main
     }
 
     //Quick Sort Algorithm
+    public static void quickSort(int[] data, int start, int end, Boolean[] pause, Scanner scnr) throws IOException {
+        if (start >= end) return;
+
+        int pivot = partition(data, start, end, pause, scnr);
+
+        quickSort(data, start, pivot - 1, pause, scnr);
+        quickSort(data, pivot + 1, end, pause, scnr);
+    }
+
+    public static int partition(int[] data, int start, int end, Boolean[] pause, Scanner scnr) throws IOException {
+        int pivot = data[end];
+        int i = start - 1;
+
+        for (int j = start; j < end; j++) {
+            if (data[j] < pivot) {
+                i++;
+                // swap
+                int temp = data[i];
+                data[i] = data[j];
+                data[j] = temp;
+
+                // print after swap
+                if (pause[0]) {
+                    PrintData(data);
+                    System.out.print("\nPress 1 to stop pausing or any other number to continue: ");
+                    int cont = scnr.nextInt();
+                    if (cont == 1) pause[0] = false;
+                }
+            }
+        }
+
+        // final swap to place pivot
+        i++;
+        int temp = data[i];
+        data[i] = data[end];
+        data[end] = temp;
+
+        if (pause[0]) {
+            PrintData(data);
+            System.out.print("\nPress 1 to stop pausing or any other number to continue: ");
+            int cont = scnr.nextInt();
+            if (cont == 1) pause[0] = false;
+        }
+
+        return i;
+    }
 
     //Bubble Sort Algorithm
     public static void bubbleSort(int[] data, Boolean pauseOption, Scanner scnr) throws IOException
@@ -443,7 +490,7 @@ public class Main
         PrintData(data);
     }
 
-    //Heap Sort Algorithm
+    //Heap Sort Algorithm (STILL NEEDS WORK)
     public static void heapSort(int[] data, Boolean pauseOption, Scanner scnr) throws IOException
     {
              int[] dataCopy = data.clone(); // Work on a copy to preserve original
