@@ -12,8 +12,36 @@ public class ProjectTest
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue()
+    public void quickTest()
     {
         assertTrue( true );
     }
+
+    public void bubbleTest()
+    {
+        assertTrue( true );
+    }
+
+    public void countingTest()
+    {
+        assertTrue( true );
+    }
+
+    public void mergeTest()
+    {
+        assertTrue( true );
+    }
+
+
+    public void insertionTest()
+    {
+        assertTrue( true );
+    }
+
+
+    public void heapTest()
+    {
+        assertTrue( true );
+    }
+
 }
