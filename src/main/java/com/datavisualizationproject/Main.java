@@ -12,63 +12,58 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-class Heap
-{
-    int arr[];
-    int size;
-    public Heap(int arr[]) {
-        this.arr = arr;
-        this.size = arr.length;
-        this.buildHeap();
-    }
+class Heap {
+    private int[] heap;
+    private int size;
 
-    void buildHeap(){
-        for(int i = this.size/2-1; 1 >= 0; i--)
-        {
+    public Heap(int[] array) {
+        this.size = array.length;
+        this.heap = new int[size];
+
+        // Copy input array
+        for (int i = 0; i < size; i++) {
+            heap[i] = array[i];
+        }
+
+        // Build Max Heap
+        for (int i = size / 2 - 1; i >= 0; i--) {
             heapify(i);
         }
     }
 
-    void heapify(int root_index) {
-        int max_index = root_index;
-        int child = root_index * 2 + 1;
+    // Maintain Max Heap property
+    private void heapify(int i) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
 
-        if (child < size) {
-            if(arr[child] > arr[root_index]) {
-                max_index = child;
-            }
-        }
+        if (left < size && heap[left] > heap[largest])
+            largest = left;
 
-        if(child + 1 < size) {
-            if(arr[child + 1] > arr[max_index]) {
-                max_index = child + 1;
-            }
-        }
+        if (right < size && heap[right] > heap[largest])
+            largest = right;
 
-        swap(arr, root_index, max_index);
-        if(root_index != max_index) {
-            heapify(max_index);
+        if (largest != i) {
+            int temp = heap[i];
+            heap[i] = heap[largest];
+            heap[largest] = temp;
+            heapify(largest);
         }
     }
 
-    void swap(int arr[], int a, int b) {
-        int temp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = temp;
-    }
+    // Extract root (max element), replace with last element, then heapify
+    public int extractRoot() {
+        if (size <= 0) {
+            throw new IllegalStateException("Heap is empty");
+        }
 
-    int extractRoot() {
-        int max = arr[0];
-        arr[0] = arr[--size];
+        int root = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
         heapify(0);
-        
-        return max;
-    }
 
-    int getSize() {
-        return size;
+        return root;
     }
-    
 }
 
 public class Main 
@@ -96,7 +91,8 @@ public class Main
             System.out.println("3: Counting Sort");
             System.out.println("4: Merge Sort");
             System.out.println("5: Insertion Sort");
-            System.out.println("6: Heap Sort Algorithm\n");
+            System.out.println("6: Heap Sort Algorithm");
+            System.out.println("7: Exit\n");
             System.out.print("Enter key: ");
 
             input = scnr.nextInt();
@@ -149,20 +145,17 @@ public class Main
                 }
 
                 //Heap Sort Algorithm
+                //This is cooked
                 case 6 -> {
-                // pause = pauseInquiry(scnr);
-                // heapSort(dataSet, pause, scnr);
-
-                System.out.println("Not locked in for this one bro ggs.");
-                break;
+                pause = pauseInquiry(scnr);
+                heapSort(dataSet, pause, scnr);
+                PrintData(dataSet);
                 
                 }
                 
 
                 //Exit Key
                 case 7 -> {
-                pause = pauseInquiry(scnr);
-
                     System.exit(0);
                 }
 
@@ -491,37 +484,27 @@ public class Main
     }
 
     //Heap Sort Algorithm (STILL NEEDS WORK)
-    public static void heapSort(int[] data, Boolean pauseOption, Scanner scnr) throws IOException
-    {
-             int[] dataCopy = data.clone(); // Work on a copy to preserve original
-    Heap heap = new Heap(dataCopy);
+    public static void heapSort(int[] array, boolean pause, Scanner scnr) {
+    Heap heap = new Heap(array);
+    int[] sorted = new int[array.length];
 
-    int cont = -1;
+    for (int i = array.length - 1; i >= 0; i--) {
+        sorted[i] = heap.extractRoot();
+        PrintData(sorted);  // Print after every root extraction
 
-    int[] sorted = new int[dataCopy.length];
-
-        for (int i = dataCopy.length - 1; i >= 0; i--) {
-            sorted[i] = heap.extractRoot();
-
-            // Create a snapshot of the current heap array
-            int[] currentHeapSnapshot = new int[heap.getSize()];
-            for (int j = 0; j < heap.getSize(); j++) {
-                currentHeapSnapshot[j] = heap.arr[j];
-            }
-
-            // Print current state of heap
-            PrintData(currentHeapSnapshot);
-            System.out.println();
-
-            if (pauseOption) {
-                System.out.print("Press 1 to stop pausing or any other number to continue: ");
-                cont = scnr.nextInt();
-                if (cont == 1) pauseOption = false;
-            }
-
+        if (pause) {
+            System.out.print("\nPress 1 to stop pausing or any other number to continue: ");
+            int cont = scnr.nextInt();
+            if (cont == 1) pause = false;
         }
-
     }
+
+    // Copy back to original array
+    for (int i = 0; i < array.length; i++) {
+        array[i] = sorted[i];
+    }
+}
+
 
 }
 
